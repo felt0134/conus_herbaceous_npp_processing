@@ -3,6 +3,7 @@
 library(raster)
 library(plyr)
 library(dplyr)
+library(reshape2)
 
 ########### ecoregion-identifying raster import  #############
 sites <- "G:/My Drive/range-resilience/Sensitivity/CONUS_rangelands_NPP_Sensitivity/climate_data_for_import/RasterbySiteID3.tif" 
@@ -213,7 +214,33 @@ WatYrprecip_done[["WatYrprecip_2015"]] <-WatYrprecip_2015
 #all years stacked, ready for cropping for each site
 WatYrprecip_stack <-stack(WatYrprecip_done)
 plot(WatYrprecip_stack)
-citation()
+
+# turn this raster stack into a dataframe that can be merged with NPP later on...
+
+precip_stack_df<-rasterToPoints(WatYrprecip_stack)
+head(precip_stack_df)
+
+precip_stack_df_2 <- as.data.frame(precip_stack_df)
+head(precip_stack_df_2)
+
+#melt to long
+precip_stack_df_melted <- melt(precip_stack_df_2, 
+                                   id.vars = c("x", "y"),
+                                   variable.name = "year") #melt to long format
+head(precip_stack_df_melted) 
+
+precip_stack_df_melted$year<-gsub('WatYrprecip_','', precip_stack_df_melted$year)
+
+head(precip_stack_df_melted)
+precip_stack_df_melted$mm<-precip_stack_df_melted$value*10 #convert from cm to mm
+summary(precip_stack_df_melted)
+precip_stack_df_melted_2<-precip_stack_df_melted[-4]
+head(precip_stack_df_melted_2)
+summary(precip_stack_df_melted_2)
+precip_stack_df_melted_2$year <- as.numeric(as.character(precip_stack_df_melted_2$year))
+View(precip_stack_df_melted_2)
+
+
 ##test code to automate###########
 
 for(i in 3:ncol(WatYrprecip_joindat_2)) {

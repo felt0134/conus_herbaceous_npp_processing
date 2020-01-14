@@ -1,3 +1,5 @@
+#cite the R version being used
+citation()
 # importing and processing forage production
 library(raster)
 library(reshape2)
@@ -5,14 +7,14 @@ library(tidyr)
 library(dplyr)
 
 conus_npp <- dir('G:/My Drive/range-resilience/Sensitivity/CONUS_rangelands_NPP_Sensitivity/NPP_Soil_Moisture/Herbaceous net primary productivity data/landsat-6000reduced-partitioned-npp/landsat-6000reduced-partitioned-npp/', full.names = T)
-conus_npp_2<-conus_npp[-1]
+conus_npp_2<-conus_npp[-c(1,32,33,34)]
 
 #create lists to store rasters
 band.1.list<-list()
 band.2.list<-list()
 
 #loop to generate list of rasters of each band
-for(i in conus_npp_2[1:33])
+for(i in conus_npp_2[1:30])
 {
   
   band.1.list[[i]] <- raster(i,band=1)
@@ -100,7 +102,7 @@ hist(herbaceous_npp_mean_uncleaned$npp)
 
 #step 1
 
-#filter out all pixels where mean npp is zero
+#filter out all pixels where mean npp is below 20
 herbaceous_npp_mean_uncleaned_nozeros <-herbaceous_npp_mean_uncleaned %>%
   dplyr::filter(npp > 20) #for now target the minimum mean production as 20 g/m^2
 summary(herbaceous_npp_mean_uncleaned_nozeros)
@@ -134,6 +136,7 @@ summary(npp_test_df)
 df_50 <-npp_test_df %>%
   dplyr::filter(landsat.6000.npp.count > 26912)
 summary(df_50)
+
 npp_test_raster_50<- rasterFromXYZ(df_50) #change back to raster
 plot(npp_test_raster_50)
 title('50% threshold')
