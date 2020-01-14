@@ -144,4 +144,6 @@ herb_npp_50_threshold = crop(herbaceous_npp_mean_uncleaned_nozeros_raster, npp_t
 herb_npp_50_threshold_2 <-mask(herb_npp_50_threshold, npp_test_raster_50)
 plot(herb_npp_50_threshold_2)
 
+test_mask<-rasterFromXYZ(herbaceous_npp_merged_2)
+plot(test_mask)
 #now we are ready to to region-specific processing.

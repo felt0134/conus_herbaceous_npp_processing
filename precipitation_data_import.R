@@ -1,7 +1,5 @@
 #import of water-year precipitation data and ecoregion boundaries
 
-
-
 library(raster)
 library(plyr)
 library(dplyr)
@@ -43,6 +41,15 @@ plot(raster_sites)
 #Create a raster for the different regions
 raster_sites <- raster_sites - raster_sites*1000000
 plot(raster_sites)
+
+#turn into dataframe
+sites_p = rasterToPoints(raster_sites_rounded); sites_df = data.frame(sites_p)
+head(sites_df)
+#1 = california annuals
+#2 = cold deserts
+#3 = hot deserts
+#4 = northern mixed grass parairies
+#5 = shortgrass steppe
 
 #climate variable directory
 dir.AFRI_Historical <- "G:/My Drive/range-resilience/Sensitivity/Preliminary_work/SoilMoisture_Data" #set working directory
@@ -206,7 +213,7 @@ WatYrprecip_done[["WatYrprecip_2015"]] <-WatYrprecip_2015
 #all years stacked, ready for cropping for each site
 WatYrprecip_stack <-stack(WatYrprecip_done)
 plot(WatYrprecip_stack)
-
+citation()
 ##test code to automate###########
 
 for(i in 3:ncol(WatYrprecip_joindat_2)) {
