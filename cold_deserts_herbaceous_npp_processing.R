@@ -151,4 +151,4 @@ summary(cold_deserts_final_herb_npp)
 #final npp for cold deserts
 cold_deserts_final_herb_npp_2<-cold_deserts_final_herb_npp[-c(3,7)]
 head(cold_deserts_final_herb_npp_2)
-hot_deserts_final_herb_npp_2$region <- 'cold_deserts'
+cold_deserts_final_herb_npp_2$region <- 'cold_deserts'

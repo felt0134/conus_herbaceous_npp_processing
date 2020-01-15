@@ -46,6 +46,7 @@ plot(raster_sites)
 #turn into dataframe
 sites_p = rasterToPoints(raster_sites_rounded); sites_df = data.frame(sites_p)
 head(sites_df)
+
 #1 = california annuals
 #2 = cold deserts
 #3 = hot deserts
