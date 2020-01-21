@@ -83,12 +83,14 @@ Regionnum <- unlist(sapply(Regionname, FUN= function(x) grep(x, regions)) )
 WatYrprecip$RegionSite <- Regionnum*1000000 + Site
 
 WatYrprecip_joindat <- join(rastvals, WatYrprecip, by="RegionSite")
-
+dim(WatYrprecip_joindat)
+head(WatYrprecip)
+View(WatYrprecip_joindat)
 #get rid of years that don't relate to NPP data: isolate 1986-2015
 WatYrprecip_joindat_2<-WatYrprecip_joindat[,-c(2:71)]
 dim(WatYrprecip_joindat_2)
 str(WatYrprecip_joindat_2)
-View(WatYrprecip_joindat)
+View(WatYrprecip_joindat_2)
 
 WatYrprecip_done <- list()
 #1986
