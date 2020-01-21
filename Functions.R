@@ -12,6 +12,7 @@ initial_cleanup<- function(x) {
   #test.df.sgs<-as.data.frame(sgs.covariates.list[1]) #need to fix this
   
   #clean up
+  x <- sapply( x, as.numeric )
   rownames(x) <- c()
   names(x) <- substrRight(names(x),4)
   x$label<-x$site
@@ -170,24 +171,30 @@ temp.list[["x_2015"]] <-x_2015
 return(temp.list)
 
 }
-test.df.sgs_2[,"2015"]
+
 
 cleanup_test<-initial_cleanup(test.df.sgs.function)
 View(test.df.sgs.function)
 View(cleanup_test)
 
-x_2015<- raster_sites
-values(x_2015) <- test.df.sgs.function_2_joindat_3[,"2011"]
-
-temp.list[["x_2015"]] <-x_2015
-summary(test.df.sgs.function_2_joindat_2)
-compare_test<-raster_link_function_x(cleanup_test)
+make_raster_test<-raster_link_function_x(test_cleanup)
+View(test_cleanup)
 plot(x_2015)
 test_df_fromraster<-rasterToPoints(x_2015)
 head(test_df_fromraster)
 View(test_df_fromraster)
   #all years stacked, ready for cropping for each site
-stack_test <-stack(test.function.list)
-plot(stack_test)
-values(x_2015)
-summary(x_2015)
+
+test_2015<- raster_sites
+values(test_2015) <- 
+  test<-as.data.frame(test_cleanup[,"2015"])
+summary(test)
+str(test)
+WatYrprecip_done[["test_2015"]] <-test_2015
+?values
+
+View(test_cleanup[,"2015"])
+summary(test_cleanup)
+summary(WatYrprecip_joindat_2)
+str(test_cleanup)
+str(WatYrprecip_joindat_2)

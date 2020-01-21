@@ -27,7 +27,7 @@ plot(raster_sites)
 #create a dataframe with values from the raster (so we can link data from the response variables to it)
 rastvals <- as.data.frame(values(raster_sites))
 names(rastvals) <- "RegionSite"
-
+View(rastvals)
 #View just the values associated with each cell
 #Note that the value in the raster includes both the region (in the millions digit; 1 to 5), and the siteID (in the other digits, range 1 to ~20,000 within each region)
 values(raster_sites)
@@ -91,11 +91,12 @@ WatYrprecip_joindat_2<-WatYrprecip_joindat[,-c(2:71)]
 dim(WatYrprecip_joindat_2)
 str(WatYrprecip_joindat_2)
 View(WatYrprecip_joindat_2)
+summary(WatYrprecip)
 
 WatYrprecip_done <- list()
 #1986
 WatYrprecip_1986<- raster_sites
-values(WatYrprecip_1986) <- WatYrprecip_joindat_2[,"1986"]
+values(WatYrprecip_1986) <- View(WatYrprecip_joindat_2[,"1986"])
 WatYrprecip_done[["WatYrprecip_1986"]] <-WatYrprecip_1986
 #1987
 WatYrprecip_1987<- raster_sites
