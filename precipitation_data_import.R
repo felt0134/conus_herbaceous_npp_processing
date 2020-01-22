@@ -74,7 +74,7 @@ WatYrprecip$Regionname <- substr(WatYrprecip$label, 8, 9)
 WatYrprecip <- dplyr::filter(WatYrprecip, Regionname != "De") #Remove excess site values
 unique(WatYrprecip$Regionname)#it works!
 WatYrprecip <- WatYrprecip[,-103]
-
+str(WatYrprecip)
 #Creating unique IDs
 sitenumENDpos = as.integer(regexpr('_', WatYrprecip$label) )
 Site <- as.integer(substr(WatYrprecip$label, 1, sitenumENDpos-1) )

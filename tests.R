@@ -1,60 +1,163 @@
-#testing historical covariate workflow for SGS
+#Import of historcial climate covariates
 
-pet_covariates<-covariates[c(17)]
+library(tidyr)
+
+####potential evapotranspiration #####
+
+pet_covariates<-covariates[c(1:4)]
 pet.covariates.list<-list()
 
-for(i in pet_covariates[1])
+for(i in pet_covariates[1:4])
 {
   
-  pet.covariates.list[[i]] <- get(load(file.path(soil_moisture_dir,i)))
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  pet.covariates.list[[i]] <- make_df
   
 }
 
-head((sgs.covariates.list[1]))
+df.pet<- do.call("rbind", pet.covariates.list)
+rm(pet.covariates.list)
+df.pet$label <- row.names(df.pet)
+rownames(df.pet) <- c()
+df.pet$label <- substr(df.pet$label, 0, 10)
+df.pet_wide <- spread(df.pet, label, value)
+#head(df.pet_wide)
+#View(df.pet)
 
-#practice
-rownames(test.df.sgs) <- c()
-names(test.df.sgs) <- substrRight(names(test.df.sgs),4)
 
-#turn into dataframe
-test.df.sgs<-as.data.frame(sgs.covariates.list[1])
-View(test.df.sgs)
-head(test.df.sgs)
-?substring
-test.df.sgs.2<-test.df.sgs[1]
-View(test.df.sgs.2)
-test.df.sgs.2$label <- row.names(test.df.sgs)
+####SWA########
 
-Strings.
+swa_covariates<-covariates[c(5:8)]
+swa.covariates.list<-list()
 
-#function just to get the last four characters of the labels
-substrRight <- function(x, n){
-  substr(x, nchar(x)-n+1, nchar(x))
+for(i in swa_covariates[1:4])
+{
+  
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  swa.covariates.list[[i]] <- make_df
+  
 }
 
-#clean up
-rownames(test.df.sgs) <- c()
-names(test.df.sgs) <- substrRight(names(test.df.sgs),4)
-View(test.df.sgs)
-test.df.sgs<-as.data.frame(sgs.covariates.list[1])
+df.swa<- do.call("rbind", swa.covariates.list)
+rm(swa.covariates.list)
+df.swa$label <- row.names(df.swa)
+rownames(df.swa) <- c()
+df.swa$label <- substr(df.swa$label, 0, 10) #NEED TO MODIFY
+df.swa_wide <- spread(df.swa, label, value)
+rm(data_wide)
 
-#integrate with
-test.df.sgs$Regionname <- substr(test.df.sgs$site, 8, 9)
-test.df.sgs <- dplyr::filter(test.df.sgs, Regionname != "De") #Remove excess site values
-unique(test.df.sgs$Regionname)
-View(test.df.sgs_2)
-test.df.sgs_2 <- test.df.sgs[,-103]
+####SWA PET ratio########
 
-#Creating unique IDs
-sitenumENDpos = as.integer(regexpr('_', test.df.sgs_2$site) )
-Site <- as.integer(substr(test.df.sgs_2$site, 1, sitenumENDpos-1) )
-Regionname <- substr(test.df.sgs_2$site, 8, 9)
-Regionnum <- unlist(sapply(Regionname, FUN= function(x) grep(x, regions)) )
-test.df.sgs_2$RegionSite <- Regionnum*1000000 + Site
+SWAPETratio_covariates<-covariates[c(9:12)]
+SWAPETratio.covariates.list<-list()
 
-test.df.sgs_2_joindat <- join(rastvals, test.df.sgs_2, by="RegionSite")
-head(test.df.sgs_2)
-View(test.df.sgs_2_joindat)
-test.df.sgs_2_joindat_2<-test.df.sgs_2_joindat[,-c(3:72)]
-View(test.df.sgs_2_joindat_2)
-#stopped here...ned to figure how to automate the original code...
+for(i in swa_covariates[1:4])
+{
+  
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  SWAPETratio_covariates.list[[i]] <- make_df
+  
+}
+
+df.SWAPETratio_covariates<- do.call("rbind", SWAPETratio_covariates.covariates.list)
+rm(SWAPETratio_covariates.covariates.list)
+df.SWAPETratio$label <- row.names(df.SWAPETratio)
+rownames(df.SWAPETratio) <- c()
+df.SWAPETratio$label <- substr(df.SWAPETratio$label, 0, 10) # NEED TO MODIFY
+df.SWAPETratio_wide <- spread(df.SWAPETratio, label, value)
+
+
+####volumetric water content down to 1 meter ########
+
+VWC1m_covariates<-covariates[c(13:16)]
+VWC1m_covariates.list<-list()
+
+for(i in VWC1m_covariates[1:4])
+{
+  
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  VWC1m_covariates.list[[i]] <- make_df
+  
+}
+
+df.VWC1m<- do.call("rbind", VWC1m_covariates.list)
+rm(VWC1m_covariates.list)
+df.VWC1m$label <- row.names(df.VWC1m)
+rownames(df.VWC1m) <- c()
+df.VWC1m$label <- substr(df.VWC1m$label, 0, 10) # NEED TO MODIFY
+df.VWC1m_wide <- spread(df.VWC1m, label, value)
+
+#### water year precipitation used for NPP processing########
+
+WatYrPRECIP_covariates<-covariates[c(17)]
+WatYrPRECIP_covariates.list<-list()
+
+for(i in WatYrPRECIP_covariates[1])
+{
+  
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  WatYrPRECIP_covariates.list[[i]] <- make_df
+  
+}
+
+df.WatYrPRECIP<-as.data.frame(WatYrPRECIP_covariates.list)
+head(df.WatYrPRECIP)
+rm(WatYrPRECIP_covariates.list)
+names(df.WatYrPRECIP)<- gsub('WatYrPRECIP_ALLregionsHIST.Rdata.', '',names(df.WatYrPRECIP))
+colnames(df.WatYrPRECIP)  <- c("x","y","year",'mm')
+
+
+####Other water year covariates ########
+
+wy_covariates<-covariates[c(18:21)]
+wy_covariates.list<-list()
+
+for(i in wy_covariates[1:4])
+{
+  
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  wy_covariates.list[[i]] <- make_df
+  
+}
+
+df.wy<- do.call("rbind", wy_covariates.list)
+rm(wy_covariates.list)
+df.wy$label <- row.names(df.wy)
+rownames(df.wy) <- c()
+df.wy$label <- substr(df.wy$label, 0, 10) # NEED TO MODIFY
+df.wy_wide <- spread(df.wy, label, value)
+
+
+####transpiration########
+
+transp_covariates<-covariates[c(18:21)]
+transp_covariates.list<-list()
+
+for(i in transp_covariates[1:4])
+{
+  
+  test <- get(load(file.path(soil_moisture_dir,i)))
+  cleanup_test<-initial_cleanup(test)
+  make_df<-raster_link_function_x(cleanup_test)
+  transp_covariates.list[[i]] <- make_df
+  
+}
+
+df.transp<- do.call("rbind", transp_covariates.list)
+rm(transp_covariates.list)
+df.transp$label <- row.names(df.transp)
+rownames(df.transp) <- c()
+df.transp$label <- substr(df.wy$label, 0, 10) # NEED TO MODIFY
+df.transp_wide <- spread(df.transp, label, value)

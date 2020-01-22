@@ -6,13 +6,13 @@ substrRight <- function(x, n){
   substr(x, nchar(x)-n+1, nchar(x))
 }
 
+
 #function for initial cleanup
 initial_cleanup<- function(x) {
   
   #test.df.sgs<-as.data.frame(sgs.covariates.list[1]) #need to fix this
   
   #clean up
-  x <- sapply( x, as.numeric )
   rownames(x) <- c()
   names(x) <- substrRight(names(x),4)
   x$label<-x$site
@@ -25,22 +25,23 @@ initial_cleanup<- function(x) {
   #unique(test.df.sgs$Regionname)
   #View(test.df.sgs_2)
   x_2 <- x[,-103]
+  x_3<-unfactor(x_2)
   
   #Creating unique IDs
-  sitenumENDpos = as.integer(regexpr('_', x_2$label) )
-  Site <- as.integer(substr(x_2$label, 1, sitenumENDpos-1) )
-  Regionname <- substr(x_2$label, 8, 9)
+  sitenumENDpos = as.integer(regexpr('_', x_3$label) )
+  Site <- as.integer(substr(x_3$label, 1, sitenumENDpos-1) )
+  Regionname <- substr(x_3$label, 8, 9)
   Regionnum <- unlist(sapply(Regionname, FUN= function(x) grep(x, regions)) )
-  x_2$RegionSite <- Regionnum*1000000 + Site
+  x_3$RegionSite <- Regionnum*1000000 + Site
   
-  x_2_joindat <- join(rastvals, x_2, by="RegionSite")
+  x_3_joindat <- join(rastvals, x_3, by="RegionSite")
   #head(test.df.sgs_2)
   #View(test.df.sgs_2_joindat)
-  x_2_joindat_2<-test.df.sgs_2_joindat[,-c(2:71)]
+  x_3_joindat_2<-x_3_joindat[,-c(2:71)]
   #View(test.df.sgs_2_joindat_2)
   
   
-  return(x_2_joindat_2)
+  return(x_3_joindat_2)
 }
 
 #function to integrate climate data with the raster
@@ -168,33 +169,27 @@ x_2015<- raster_sites
 values(x_2015) <- x[,"2015"]
 temp.list[["x_2015"]] <-x_2015
 
-return(temp.list)
+x_stack <-stack(temp.list) #stack all the stored raster
+
+#made into dataframe
+x_stack_df<-rasterToPoints(x_stack)
+head(x_stack_df)
+
+x_stack_df_2 <- as.data.frame(x_stack_df)
+head(x_stack_df_2)
+
+x_stack_df_melted <- melt(x_stack_df_2, 
+                          id.vars = c("x", "y"),
+                          variable.name = "year") #melt to long format
+
+head(x_stack_df_melted)
+
+
+x_stack_df_melted$year<-gsub('x_','', x_stack_df_melted$year)
+
+
+return(x_stack_df_melted)
+
 
 }
 
-
-cleanup_test<-initial_cleanup(test.df.sgs.function)
-View(test.df.sgs.function)
-View(cleanup_test)
-
-make_raster_test<-raster_link_function_x(test_cleanup)
-View(test_cleanup)
-plot(x_2015)
-test_df_fromraster<-rasterToPoints(x_2015)
-head(test_df_fromraster)
-View(test_df_fromraster)
-  #all years stacked, ready for cropping for each site
-
-test_2015<- raster_sites
-values(test_2015) <- 
-  test<-as.data.frame(test_cleanup[,"2015"])
-summary(test)
-str(test)
-WatYrprecip_done[["test_2015"]] <-test_2015
-?values
-
-View(test_cleanup[,"2015"])
-summary(test_cleanup)
-summary(WatYrprecip_joindat_2)
-str(test_cleanup)
-str(WatYrprecip_joindat_2)
