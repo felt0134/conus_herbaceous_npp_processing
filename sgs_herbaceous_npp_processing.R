@@ -50,7 +50,7 @@ summary(merge_sgs_3)
 names(merge_sgs_3)[names(merge_sgs_3) == "npp.y"] <- "npp"
 
 #merge with precipitation data
-sgs_npp_mm<-merge(merge_sgs_3,precip_stack_df_melted_2,by=c('x','y','year'))
+sgs_npp_mm<-merge(merge_sgs_3,df.WatYrPRECIP,by=c('x','y','year'))
 head(sgs_npp_mm)
 View(sgs_npp_mm)
 summary(sgs_npp_mm)
@@ -99,6 +99,7 @@ slope_temporal_sgs_herb_2<-as.data.frame(sgs_coef_only_herb)
 head(slope_temporal_sgs_herb_2)
 summary(slope_temporal_sgs_herb_2)
 hist(slope_temporal_sgs_herb_2$coef)
+
 #set threshold for masking
 mean(slope_temporal_sgs_herb_2$coef) + 3*sd(slope_temporal_sgs_herb_2$coef) #0.51
 mean(slope_temporal_sgs_herb_2$coef) - 3*sd(slope_temporal_sgs_herb_2$coef) #0.05
@@ -149,7 +150,20 @@ summary(sgs_final_herb_npp)
 sgs_final_herb_npp$rue<-sgs_final_herb_npp$npp/sgs_final_herb_npp$mm
 summary(sgs_final_herb_npp)
 
-#final npp for cold deserts
+#final npp for sgs
 sgs_final_herb_npp_2<-sgs_final_herb_npp[-c(3,7)]
 head(sgs_final_herb_npp_2)
 sgs_final_herb_npp_2$region <- 'shortgrass_steppe'
+
+#additional stuff for regularization prep
+sgs_reg_historical<-sgs_final_herb_npp_2
+sgs_reg_historical_merged<-merge(sgs_reg_historical,df.wy_wide,by=c('x','y','year'))
+head(sgs_reg_historical_merged)
+sgs_reg_historical_merged<-sgs_reg_historical_merged[-c(6,8,9,10)]
+summary(sgs_reg_historical_merged)
+colnames(sgs_reg_historical_merged)  <- c("x","y","year",'npp','mm','temp')
+saveRDS(sgs_reg_historical_merged, file = 'G:/My Drive/range-resilience/Sensitivity/CONUS_rangelands_NPP_Sensitivity/Processing NPP Data/Hebaceous NPP Data processing/Hebaceous_NPP_Processing/historical_precip_temp_sgs_test.rds')
+
+#TO CROP WITH
+for_cropping_sgs<-aggregate(npp~x+y,mean,data=sgs_reg_historical_merged)
+head(for_cropping_sgs)

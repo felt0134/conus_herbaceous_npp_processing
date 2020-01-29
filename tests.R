@@ -2,6 +2,11 @@
 
 library(tidyr)
 
+
+#G:\My Drive\range-resilience\Sensitivity\Preliminary_work\SoilMoisture_Data\SOILWAT_Output_Fall2019
+soil_moisture_dir <- dir("G:/My Drive/range-resilience/Sensitivity/Preliminary_work/SoilMoisture_Data/SOILWAT_Output_Fall2019") 
+covariates<-soil_moisture_dir[-c(1)]
+soil_moisture_dir <- "G:/My Drive/range-resilience/Sensitivity/Preliminary_work/SoilMoisture_Data/SOILWAT_Output_Fall2019" 
 ####potential evapotranspiration #####
 
 pet_covariates<-covariates[c(1:4)]
@@ -115,7 +120,7 @@ head(df.WatYrPRECIP)
 rm(WatYrPRECIP_covariates.list)
 names(df.WatYrPRECIP)<- gsub('WatYrPRECIP_ALLregionsHIST.Rdata.', '',names(df.WatYrPRECIP))
 colnames(df.WatYrPRECIP)  <- c("x","y","year",'mm')
-
+df.WatYrPRECIP$mm<-df.WatYrPRECIP$mm*10
 
 ####Other water year covariates ########
 
@@ -136,9 +141,10 @@ df.wy<- do.call("rbind", wy_covariates.list)
 rm(wy_covariates.list)
 df.wy$label <- row.names(df.wy)
 rownames(df.wy) <- c()
-df.wy$label <- substr(df.wy$label, 0, 10) # NEED TO MODIFY
+head(df.wy)
+df.wy$label <- substr(df.wy$label, 0, 9) # NEED TO MODIFY
 df.wy_wide <- spread(df.wy, label, value)
-
+head(df.wy_wide)
 
 ####transpiration########
 
@@ -161,3 +167,4 @@ df.transp$label <- row.names(df.transp)
 rownames(df.transp) <- c()
 df.transp$label <- substr(df.wy$label, 0, 10) # NEED TO MODIFY
 df.transp_wide <- spread(df.transp, label, value)
+head(df.transp_wide)

@@ -1,5 +1,62 @@
 #FUNCTIONS
+library(dmm)
+library(varhandle)
 
+########regions###########
+#import of water-year precipitation data and ecoregion boundaries
+
+library(raster)
+library(plyr)
+library(dplyr)
+library(reshape2)
+
+########### ecoregion-identifying raster import  #############
+sites <- "G:/My Drive/range-resilience/Sensitivity/CONUS_rangelands_NPP_Sensitivity/climate_data_for_import/RasterbySiteID3.tif" 
+raster_sites<-raster(sites)
+plot(raster_sites)
+
+#raster math
+raster_sites_rounded <- round(raster_sites/1000000)
+plot(raster_sites_rounded) #see what it looks like
+
+#Create a raster for the different regions, I guess this makes the colors more clear?
+AFRI_Site_raster <- raster_sites_rounded - raster_sites*1000000
+plot(AFRI_Site_raster)
+
+regions <-  c( "CaliforniaAnnual", "ColdDeserts", "HotDeserts", "NorthernMixedSubset", "SGS")
+
+#ecoregion raster
+raster_sites<-raster(sites)
+plot(raster_sites)
+
+#create a dataframe with values from the raster (so we can link data from the response variables to it)
+rastvals <- as.data.frame(values(raster_sites))
+names(rastvals) <- "RegionSite"
+View(rastvals)
+#View just the values associated with each cell
+#Note that the value in the raster includes both the region (in the millions digit; 1 to 5), and the siteID (in the other digits, range 1 to ~20,000 within each region)
+values(raster_sites)
+
+#Plot the raster
+plot(raster_sites)
+
+#Create a raster for the different regions
+raster_sites <- round(raster_sites/1000000)
+plot(raster_sites)
+
+#Create a raster for the different regions
+raster_sites <- raster_sites - raster_sites*1000000
+plot(raster_sites)
+
+#turn into dataframe
+sites_p = rasterToPoints(raster_sites_rounded); sites_df = data.frame(sites_p)
+head(sites_df)
+
+#1 = california annuals
+#2 = cold deserts
+#3 = hot deserts
+#4 = northern mixed grass parairies
+#5 = shortgrass steppe
 
 #function just to get the last four characters of the labels
 substrRight <- function(x, n){
