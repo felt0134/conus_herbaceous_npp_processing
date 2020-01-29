@@ -144,7 +144,7 @@ plot(sgs_masking)
 sgs_masking_df<-rasterToPoints(sgs_masking)
 summary(sgs_masking_df)
 
-#merge for finally herbaceous NPP dataframe
+#merge for final herbaceous NPP dataframe
 sgs_final_herb_npp<-merge(sgs_masking_df,sgs_npp_mm,by=c('x','y'))
 summary(sgs_final_herb_npp)
 sgs_final_herb_npp$rue<-sgs_final_herb_npp$npp/sgs_final_herb_npp$mm
@@ -155,7 +155,7 @@ sgs_final_herb_npp_2<-sgs_final_herb_npp[-c(3,7)]
 head(sgs_final_herb_npp_2)
 sgs_final_herb_npp_2$region <- 'shortgrass_steppe'
 
-#additional stuff for regularization prep
+###additional stuff for regularization prep####
 sgs_reg_historical<-sgs_final_herb_npp_2
 sgs_reg_historical_merged<-merge(sgs_reg_historical,df.wy_wide,by=c('x','y','year'))
 head(sgs_reg_historical_merged)

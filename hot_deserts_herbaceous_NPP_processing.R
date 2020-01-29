@@ -48,7 +48,7 @@ summary(merge_hot_deserts_3)
 names(merge_hot_deserts_3)[names(merge_hot_deserts_3) == "npp.y"] <- "npp"
 
 #merge with precipitation data
-hot_deserts_npp_mm<-merge(merge_hot_deserts_3,precip_stack_df_melted_2,by=c('x','y','year'))
+hot_deserts_npp_mm<-merge(merge_hot_deserts_3,df.WatYrPRECIP,by=c('x','y','year'))
 head(hot_deserts_npp_mm)
 View(hot_deserts_npp_mm)
 summary(hot_deserts_npp_mm)
@@ -69,7 +69,7 @@ summary(mean_rue_hot_deserts_2)
 
 #set threshold for masking
 mean(mean_rue_hot_deserts_2$pue) + 3*sd(mean_rue_hot_deserts_2$pue) #0.6671725
-mean(mean_rue_hot_deserts_2$pue) - 3*sd(mean_rue_hot_deserts_2$pue)
+mean(mean_rue_hot_deserts_2$pue) - 3*sd(mean_rue_hot_deserts_2$pue) #below minimum
 
 #isolate values greater than 3sd away for mean precip use efficiency
 mean_rue_hot_deserts_2_filtered <- mean_rue_hot_deserts_2 %>%
@@ -90,7 +90,6 @@ slope_temporal_hot_deserts_herb <- mean_rue_hot_deserts_2_filtered_allyears_2 %>
   dplyr::do(model = lm(npp~mm, data = .)) %>%
   dplyr::mutate(coef=coef(model)[2])
 
-
 head(slope_temporal_hot_deserts_herb)
 hot_deserts_coef_only_herb<- slope_temporal_hot_deserts_herb[ -c(3) ] #isolate coefficient so only slope is graphed
 head(hot_deserts_coef_only_herb)
@@ -99,12 +98,12 @@ head(slope_temporal_hot_deserts_herb_2)
 summary(slope_temporal_hot_deserts_herb_2)
 
 #set threshold for masking
-mean(slope_temporal_hot_deserts_herb_2$coef) + 3*sd(slope_temporal_hot_deserts_herb_2$coef) #0.69
-mean(slope_temporal_hot_deserts_herb_2$coef) - 3*sd(slope_temporal_hot_deserts_herb_2$coef)
+mean(slope_temporal_hot_deserts_herb_2$coef) + 3*sd(slope_temporal_hot_deserts_herb_2$coef) #0.42
+mean(slope_temporal_hot_deserts_herb_2$coef) - 3*sd(slope_temporal_hot_deserts_herb_2$coef) #below minimum
 
 #isolate values greater than 3sd away for mean precip use efficiency
 slope_temporal_hot_deserts_herb_2_filtered <- slope_temporal_hot_deserts_herb_2 %>%
-  dplyr::filter(coef < 0.69) 
+  dplyr::filter(coef < 0.42) 
 summary(slope_temporal_hot_deserts_herb_2_filtered)
 
 temporal_slope_hot_deserts_filtered_allyears<-merge(slope_temporal_hot_deserts_herb_2_filtered,hot_deserts_npp_mm,by=c("x","y"))
@@ -115,10 +114,10 @@ temporal_slope_hot_deserts_filtered_allyears$pue <- temporal_slope_hot_deserts_f
 summary(temporal_slope_hot_deserts_filtered_allyears)
 
 #set threshold for masking
-mean(temporal_slope_hot_deserts_filtered_allyears$pue) + 3*sd(temporal_slope_hot_deserts_filtered_allyears$pue) #1.98
+mean(temporal_slope_hot_deserts_filtered_allyears$pue) + 3*sd(temporal_slope_hot_deserts_filtered_allyears$pue) #1.99
 mean(temporal_slope_hot_deserts_filtered_allyears$pue) - 3*sd(temporal_slope_hot_deserts_filtered_allyears$pue) #below minimum
 
-yearly_pue_anamolies_hot_deserts<-filter(temporal_slope_hot_deserts_filtered_allyears,pue > 1.98)
+yearly_pue_anamolies_hot_deserts<-filter(temporal_slope_hot_deserts_filtered_allyears,pue > 1.99)
 yearly_pue_anamolies_hot_deserts_final<-yearly_pue_anamolies_hot_deserts[-c(3)]
 summary(yearly_pue_anamolies_hot_deserts_final)
 head(yearly_pue_anamolies_hot_deserts_final)

@@ -50,7 +50,7 @@ summary(merge_cali_3)
 names(merge_cali_3)[names(merge_cali_3) == "npp.y"] <- "npp"
 
 #merge with precipitation data
-cali_npp_mm<-merge(merge_cali_3,precip_stack_df_melted_2,by=c('x','y','year'))
+cali_npp_mm<-merge(merge_cali_3,df.WatYrPRECIP,by=c('x','y','year'))
 head(cali_npp_mm)
 View(cali_npp_mm)
 summary(cali_npp_mm)
@@ -71,7 +71,7 @@ summary(mean_rue_cali_2)
 
 #set threshold for masking
 mean(mean_rue_cali_2$pue) + 3*sd(mean_rue_cali_2$pue) #1.32
-mean(mean_rue_cali_2$pue) - 3*sd(mean_rue_cali_2$pue) #0.014
+mean(mean_rue_cali_2$pue) - 3*sd(mean_rue_cali_2$pue) #below minimum
 
 #isolate values greater than 3sd away for mean precip use efficiency
 mean_rue_cali_2_filtered <- mean_rue_cali_2 %>%
@@ -102,7 +102,7 @@ hist(slope_temporal_cali_herb_2$coef)
 
 #set threshold for masking
 mean(slope_temporal_cali_herb_2$coef) + 3*sd(slope_temporal_cali_herb_2$coef) #0.46
-mean(slope_temporal_cali_herb_2$coef) - 3*sd(slope_temporal_cali_herb_2$coef) #-0.21
+mean(slope_temporal_cali_herb_2$coef) - 3*sd(slope_temporal_cali_herb_2$coef) # below minimum
 
 #isolate values greater than 3sd away for mean precip use efficiency
 slope_temporal_cali_herb_2_filtered <- slope_temporal_cali_herb_2 %>%
@@ -118,7 +118,7 @@ summary(temporal_slope_cali_filtered_allyears)
 
 #set threshold for masking
 mean(temporal_slope_cali_filtered_allyears$pue) + 3*sd(temporal_slope_cali_filtered_allyears$pue) #1.91
-mean(temporal_slope_cali_filtered_allyears$pue) - 3*sd(temporal_slope_cali_filtered_allyears$pue) #-0.41
+mean(temporal_slope_cali_filtered_allyears$pue) - 3*sd(temporal_slope_cali_filtered_allyears$pue) #below minimum
 
 yearly_pue_anamolies_cali <- temporal_slope_cali_filtered_allyears %>%
   dplyr::filter(pue > 1.91) 

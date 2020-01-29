@@ -53,7 +53,7 @@ summary(merge_northern_mixed_3)
 names(merge_northern_mixed_3)[names(merge_northern_mixed_3) == "npp.y"] <- "npp"
 
 #merge with precipitation data
-northern_mixed_npp_mm<-merge(merge_northern_mixed_3,precip_stack_df_melted_2,by=c('x','y','year'))
+northern_mixed_npp_mm<-merge(merge_northern_mixed_3,df.WatYrPRECIP,by=c('x','y','year'))
 head(northern_mixed_npp_mm)
 View(northern_mixed_npp_mm)
 summary(northern_mixed_npp_mm)
@@ -102,13 +102,14 @@ slope_temporal_northern_mixed_herb_2<-as.data.frame(northern_mixed_coef_only_her
 head(slope_temporal_northern_mixed_herb_2)
 summary(slope_temporal_northern_mixed_herb_2)
 hist(slope_temporal_northern_mixed_herb_2$coef)
+
 #set threshold for masking
-mean(slope_temporal_northern_mixed_herb_2$coef) + 3*sd(slope_temporal_northern_mixed_herb_2$coef) #0.50
+mean(slope_temporal_northern_mixed_herb_2$coef) + 3*sd(slope_temporal_northern_mixed_herb_2$coef) #0.45
 mean(slope_temporal_northern_mixed_herb_2$coef) - 3*sd(slope_temporal_northern_mixed_herb_2$coef) #-0.011
 
 #isolate values greater than 3sd away for mean precip use efficiency
 slope_temporal_northern_mixed_herb_2_filtered <- slope_temporal_northern_mixed_herb_2 %>%
-  dplyr::filter(coef < 0.50 & coef > -0.011) 
+  dplyr::filter(coef < 0.45 & coef > -0.011) 
 summary(slope_temporal_northern_mixed_herb_2_filtered)
 
 temporal_slope_northern_mixed_filtered_allyears<-merge(slope_temporal_northern_mixed_herb_2_filtered,northern_mixed_npp_mm,by=c("x","y"))

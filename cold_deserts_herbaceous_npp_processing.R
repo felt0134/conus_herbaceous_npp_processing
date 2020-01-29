@@ -51,7 +51,7 @@ summary(merge_cold_deserts_3)
 names(merge_cold_deserts_3)[names(merge_cold_deserts_3) == "npp.y"] <- "npp"
 
 #merge with precipitation data
-cold_deserts_npp_mm<-merge(merge_cold_deserts_3,precip_stack_df_melted_2,by=c('x','y','year'))
+cold_deserts_npp_mm<-merge(merge_cold_deserts_3,df.WatYrPRECIP,by=c('x','y','year'))
 head(cold_deserts_npp_mm)
 View(cold_deserts_npp_mm)
 summary(cold_deserts_npp_mm)
@@ -72,7 +72,7 @@ summary(mean_rue_cold_deserts_2)
 
 #set threshold for masking
 mean(mean_rue_cold_deserts_2$pue) + 3*sd(mean_rue_cold_deserts_2$pue) #0.80
-mean(mean_rue_cold_deserts_2$pue) - 3*sd(mean_rue_cold_deserts_2$pue)
+mean(mean_rue_cold_deserts_2$pue) - 3*sd(mean_rue_cold_deserts_2$pue) #below minimum
 
 #isolate values greater than 3sd away for mean precip use efficiency
 mean_rue_cold_deserts_2_filtered <- mean_rue_cold_deserts_2 %>%
@@ -100,9 +100,10 @@ slope_temporal_cold_deserts_herb_2<-as.data.frame(cold_deserts_coef_only_herb)
 head(slope_temporal_cold_deserts_herb_2)
 summary(slope_temporal_cold_deserts_herb_2)
 hist(slope_temporal_cold_deserts_herb_2$coef)
+
 #set threshold for masking
 mean(slope_temporal_cold_deserts_herb_2$coef) + 3*sd(slope_temporal_cold_deserts_herb_2$coef) #0.35
-mean(slope_temporal_cold_deserts_herb_2$coef) - 3*sd(slope_temporal_cold_deserts_herb_2$coef)
+mean(slope_temporal_cold_deserts_herb_2$coef) - 3*sd(slope_temporal_cold_deserts_herb_2$coef) #-0.11
 
 #isolate values greater than 3sd away for mean precip use efficiency
 slope_temporal_cold_deserts_herb_2_filtered <- slope_temporal_cold_deserts_herb_2 %>%
@@ -118,7 +119,7 @@ summary(temporal_slope_cold_deserts_filtered_allyears)
 
 #set threshold for masking
 mean(temporal_slope_cold_deserts_filtered_allyears$pue) + 3*sd(temporal_slope_cold_deserts_filtered_allyears$pue) #0.81
-mean(temporal_slope_cold_deserts_filtered_allyears$pue) - 3*sd(temporal_slope_cold_deserts_filtered_allyears$pue) #-0.2
+mean(temporal_slope_cold_deserts_filtered_allyears$pue) - 3*sd(temporal_slope_cold_deserts_filtered_allyears$pue) #below minimum
 
 yearly_pue_anamolies_cold_deserts<-filter(temporal_slope_cold_deserts_filtered_allyears,pue > 0.81)
 summary(yearly_pue_anamolies_cold_deserts)
